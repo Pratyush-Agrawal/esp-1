@@ -21,8 +21,8 @@ static unsigned DMA_WORD_PER_BEAT(unsigned _st)
 #define DEV_NAME "sld,cholesky_6x6"
 
 /* <<--params-->> */
-const int32_t input_rows = 4;
-const int32_t output_rows = 4;
+const int32_t input_rows = 8;
+const int32_t output_rows = 8;
 
 static unsigned in_words_adj;
 static unsigned out_words_adj;
