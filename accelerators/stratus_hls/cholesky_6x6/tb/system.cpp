@@ -93,12 +93,12 @@ void system_t::load_memory()
     in_size = in_words_adj * (1);
     out_size = out_words_adj * (1);
 
-ifstream f("/home/esp2020/pa2562/esp/accelerators/stratus_hls/cholesky_6x6/datagen/input.txt");
+ifstream f("/home/esp2020/pa2562/esp-fall20/accelerators/stratus_hls/cholesky_6x6/datagen/input.txt");
     if (!f) {
         cout << "Cannot open input file.\n";
         return;
     }
-ifstream fo("/home/esp2020/pa2562/esp/accelerators/stratus_hls/cholesky_6x6/datagen/output.txt");
+ifstream fo("/home/esp2020/pa2562/esp-fall20/accelerators/stratus_hls/cholesky_6x6/datagen/output.txt");
     if (!fo) {
         cout << "Cannot open input file.\n";
         return;
