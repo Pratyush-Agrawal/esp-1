@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sld>
+  <accelerator name="dct_idct" desc="Accelerator DCT_IDCT" data_size="4" device_id="067" hls_tool="vivado_hls">
+    <param name="output_cols" desc="output_cols" />
+    <param name="output_rows" desc="output_rows" />
+    <param name="dct_istrue" desc="dct_istrue" />
+    <param name="input_rows" desc="input_rows" />
+    <param name="input_cols" desc="input_cols" />
+  </accelerator>
+</sld>
