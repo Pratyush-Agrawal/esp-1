@@ -45,6 +45,12 @@ typedef struct dma_word {
 typedef word_t in_data_word;
 typedef word_t out_data_word;
 
+//CUSTOM DATA TYPE
+#if (BASIC==1)
+typedef ap_fixed<DATA_BITWIDTH, DATA_BITWIDTH-16> FPDATA;
+#else
+typedef ap_fixed<DATA_BITWIDTH, DATA_BITWIDTH-16, AP_RND_MIN_INF, AP_WRAP> FPDATA;
+#endif
 // Ctrl
 typedef struct dma_info {
     ap_uint<32> index;
@@ -78,7 +84,7 @@ void top(dma_word_t *out, dma_word_t *in1,
 	 const unsigned conf_info_output_cols,
 	 dma_info_t &load_ctrl, dma_info_t &store_ctrl);
 
-void compute(word_t _inbuff[SIZE_IN_CHUNK_DATA],
+void compute(FPDATA _inbuff[SIZE_IN_CHUNK_DATA],
 	     word_t _outbuff[SIZE_OUT_CHUNK_DATA]);
 
 #endif
