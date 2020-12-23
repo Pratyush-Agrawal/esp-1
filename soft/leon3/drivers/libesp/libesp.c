@@ -58,12 +58,12 @@ bool thread_is_p2p(esp_thread_info_t *thread)
 {
      switch (thread->type) {
         // <<--esp-p2p-thread-->>
+		case cholesky :
+			return (thread->desc.cholesky_desc.esp.p2p_store
+				|| thread->desc.cholesky_desc.esp.p2p_nsrcs);
 		case dct_idct :
 			return (thread->desc.dct_idct_desc.esp.p2p_store
 				|| thread->desc.dct_idct_desc.esp.p2p_nsrcs);
-        case cholesky_6x6 :
-            return (thread->desc.cholesky_6x6_desc.esp.p2p_store
-                    || thread->desc.cholesky_6x6_desc.esp.p2p_nsrcs);
 	case fftaccelerator :
             return (thread->desc.fftaccelerator_desc.esp.p2p_store 
                     || thread->desc.fftaccelerator_desc.esp.p2p_nsrcs);
@@ -119,12 +119,12 @@ void *accelerator_thread( void *ptr )
     gettime(&th_start);
 	switch (info->type) {
 	// <<--esp-ioctl-->>
+	case cholesky :
+		rc = ioctl(info->fd, CHOLESKY_IOC_ACCESS, info->desc.cholesky_desc);
+		break;
 	case dct_idct :
 		rc = ioctl(info->fd, DCT_IDCT_IOC_ACCESS, info->desc.dct_idct_desc);
 		break;
-	case cholesky_6x6 :
-                rc = ioctl(info->fd, CHOLESKY_6X6_IOC_ACCESS, info->desc.cholesky_6x6_desc);
-                break;
 
 	case fftaccelerator :
 		rc = ioctl(info->fd, FFTACCELERATOR_IOC_ACCESS, info->desc.fftaccelerator_desc);
@@ -221,12 +221,12 @@ void *accelerator_thread_serial(void *ptr)
         gettime(&th_start);
         switch (info->type) {
         // <<--esp-ioctl-->>
+	case cholesky :
+		rc = ioctl(info->fd, CHOLESKY_IOC_ACCESS, info->desc.cholesky_desc);
+		break;
 	case dct_idct :
 		rc = ioctl(info->fd, DCT_IDCT_IOC_ACCESS, info->desc.dct_idct_desc);
 		break;
-        case cholesky_6x6 :
-            rc = ioctl(info->fd, CHOLESKY_6X6_IOC_ACCESS, info->desc.cholesky_6x6_desc);
-            break;
 
 	case fftaccelerator :
             rc = ioctl(info->fd, FFTACCELERATOR_IOC_ACCESS, info->desc.fftaccelerator_desc);
@@ -309,12 +309,12 @@ static void esp_config(esp_thread_info_t* cfg[], unsigned nthreads, unsigned *na
             contig_handle_t *handle = lookup_handle(info->hw_buf, &policy);
             switch (info->type) {
             // <<--esp-prepare-->>
+		case cholesky :
+			esp_prepare(&info->desc.cholesky_desc.esp, handle, policy);
+			break;
 		case dct_idct :
 			esp_prepare(&info->desc.dct_idct_desc.esp, handle, policy);
 			break;
-            case cholesky_6x6 :
-                esp_prepare(&info->desc.cholesky_6x6_desc.esp, handle, policy);
-                break;
 
 	    case fftaccelerator :
                 esp_prepare(&info->desc.fftaccelerator_desc.esp, handle, policy);

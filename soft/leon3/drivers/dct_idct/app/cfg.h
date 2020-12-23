@@ -6,11 +6,11 @@
 typedef int32_t token_t;
 
 /* <<--params-def-->> */
-#define INPUT_COLS 8
-#define INPUT_ROWS 8
-#define DCT_ISTRUE 1
-#define OUTPUT_ROWS 8
-#define OUTPUT_COLS 8
+#define INPUT_COLS 16
+#define INPUT_ROWS 16
+#define DCT_ISTRUE 0
+#define OUTPUT_ROWS 10
+#define OUTPUT_COLS 10
 
 /* <<--params-->> */
 const int32_t input_cols = INPUT_COLS;

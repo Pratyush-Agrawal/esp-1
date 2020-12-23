@@ -9,7 +9,7 @@
 #include <esp_accelerator.h>
 #include <esp_probe.h>
 #include <fixed_point.h>
-
+#include <math.h>
 typedef int32_t token_t;
 
 static unsigned DMA_WORD_PER_BEAT(unsigned _st)
@@ -55,32 +55,49 @@ static unsigned mem_size;
 
 static int validate_buf(token_t *out, token_t *gold)
 {
-	int i;
 	int j;
 	unsigned errors = 0;
+	unsigned errors_x = 0;
+	unsigned errors_1 = 0;
+	unsigned errors_2 = 0;
+	unsigned errors_3 = 0;
+	unsigned errors_4 = 0;
+	int golden, design;
+	int VAL;
 
-	for (i = 0; i < 1; i++)
-		for (j = 0; j < output_rows * output_cols; j++)
-			if (gold[i * out_words_adj + j] != out[i * out_words_adj + j])
-				errors++;
+	 for( j = 0; j < output_rows * output_cols; j++) {
+		golden= (int)(gold[j]);
+		design= (int)(out[j]);
+ 		printf("GOLDEN VALUE  = %d \t   DESIGN VALUE = %d \t ELEMENT = %d  \n ", golden, design, j );
+		VAL = fabs(golden - design);
+	    	if (VAL == 1){
+			// printf(" MISMATCH FOUND : Difference between golden value and output from design is 1 \n");
+			 errors_1++;
+        	} else if (VAL ==2) {
+			// printf(" MISMATCH FOUND : Difference between golden value and output from design is 2 \n");
+			errors_2++;
+		} else if (VAL==3) {
+			// printf(" MISMATCH FOUND : Difference between golden value and output from design is 3 \n");
+			errors_3++;
+		} else if (VAL >=4) {
+			// printf(" MISMATCH FOUND : Difference between golden value and output from design is more than 3 \n");
+			errors_4++;
+		}
+	}
 
-	return errors;
+	errors = errors_1 + errors_2 + errors_3 + errors_4;
+	errors_x = errors_3 + errors_4;
+#ifndef __sparc
+#else
+	printf(" Elements with difference 1 are : %d \n",errors_1);
+	printf(" Elements with difference 2 are : %d \n",errors_2);
+	printf(" Elements with difference 3 are : %d \n",errors_3);
+	printf(" Elements with difference 4 are : %d \n",errors_4);
+	printf(" Total Elements with errors are : %d \n",errors);
+#endif
+	return errors_x;
 }
 
-
-static void init_buf (token_t *in, token_t * gold)
-{
-	int i;
-	int j;
-
-	for (i = 0; i < 1; i++)
-		for (j = 0; j < input_rows * input_cols; j++)
-			in[i * in_words_adj + j] = (token_t) j;
-
-	for (i = 0; i < 1; i++)
-		for (j = 0; j < output_rows * output_cols; j++)
-			gold[i * out_words_adj + j] = (token_t) j;
-}
 
 
 int main(int argc, char * argv[])
@@ -119,7 +136,6 @@ int main(int argc, char * argv[])
 		printf("dct_idct not found\n");
 		return 0;
 	}
-
 	for (n = 0; n < ndev; n++) {
 
 		dev = &espdevs[n];
@@ -149,8 +165,7 @@ int main(int argc, char * argv[])
 		printf("  nchunk = %lu\n", NCHUNK(mem_size));
 
 		printf("  Generate input...\n");
-		init_buf(mem, gold);
-
+		#include "barec_data.h"
 		// Pass common configuration parameters
 
 		iowrite32(dev, SELECT_REG, ioread32(dev, DEVID_REG));
@@ -196,10 +211,23 @@ int main(int argc, char * argv[])
 
 		/* Validation */
 		errors = validate_buf(&mem[out_offset], gold);
-		if (errors)
-			printf("  ... FAIL\n");
-		else
-			printf("  ... PASS\n");
+		float err_rate=0.01f;
+		float num_err =  ((float)errors/(output_rows* output_cols));
+
+		if(  num_err  < err_rate) {
+			printf("#################################\n");
+			printf("#########  Test PASSED ##########\n");
+			printf("## Percent of Elements with error = %f \n", (num_err *100));
+			printf("#################################\n");
+		}
+		else {
+			printf("#################################\n");
+                	printf("#########  Test FAILED ##########\n");
+                	printf("## Percent of Elements with error = %f \n", (num_err * 100));
+                	printf("#################################\n");
+                }
+
+
 
 		aligned_free(ptable);
 		aligned_free(mem);
