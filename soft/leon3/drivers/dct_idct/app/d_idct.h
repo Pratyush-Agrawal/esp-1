@@ -108,6 +108,7 @@ int y =0;
                      int global_threadIDx;
                      int global_threadIDy;
                      int id = x * 8 * IC + y *8 ;
+                     int ido = x * 8 * OC + y *8 ;
 
                 for(int i=0 ; i <8 ; i++)
                     {
@@ -133,7 +134,7 @@ int y =0;
                                 global_threadIDy = blockidy * 8 + i;
 
                                     if( global_threadIDy < OR && global_threadIDx < OC)
-                                       output_matrix[i*OC +j+id]=  omatrix[i*8 + j];  
+                                       output_matrix[i*OC +j+ido]=  omatrix[i*8 + j];  
                                     
                             }
                     }

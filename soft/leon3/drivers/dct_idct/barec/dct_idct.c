@@ -68,7 +68,7 @@ static int validate_buf(token_t *out, token_t *gold)
 	 for( j = 0; j < output_rows * output_cols; j++) {
 		golden= (int)(gold[j]);
 		design= (int)(out[j]);
- 		printf("GOLDEN VALUE  = %d \t   DESIGN VALUE = %d \t ELEMENT = %d  \n ", golden, design, j );
+ 	//	printf("GOLDEN VALUE  = %d \t   DESIGN VALUE = %d \t ELEMENT = %d  \n ", golden, design, j );
 		VAL = fabs(golden - design);
 	    	if (VAL == 1){
 			// printf(" MISMATCH FOUND : Difference between golden value and output from design is 1 \n");
@@ -87,15 +87,13 @@ static int validate_buf(token_t *out, token_t *gold)
 
 	errors = errors_1 + errors_2 + errors_3 + errors_4;
 	errors_x = errors_3 + errors_4;
-#ifndef __sparc
-#else
-	printf(" Elements with difference 1 are : %d \n",errors_1);
-	printf(" Elements with difference 2 are : %d \n",errors_2);
-	printf(" Elements with difference 3 are : %d \n",errors_3);
-	printf(" Elements with difference 4 are : %d \n",errors_4);
-	printf(" Total Elements with errors are : %d \n",errors);
-#endif
-	return errors_x;
+//	printf(" Elements with difference 1 are : %d \n",errors_1);
+//	printf(" Elements with difference 2 are : %d \n",errors_2);
+//	printf(" Elements with difference 3 are : %d \n",errors_3);
+//	printf(" Elements with difference 4 are : %d \n",errors_4);
+//	printf(" Total Elements with errors are : %d \n",errors);
+	
+return errors_x;
 }
 
 
@@ -164,7 +162,7 @@ int main(int argc, char * argv[])
 		printf("  ptable = %p\n", ptable);
 		printf("  nchunk = %lu\n", NCHUNK(mem_size));
 
-		printf("  Generate input...\n");
+		printf("  Generate input : Loading data from barec_data.h...\n");
 		#include "barec_data.h"
 		// Pass common configuration parameters
 
@@ -201,6 +199,7 @@ int main(int argc, char * argv[])
 		// Wait for completion
 		done = 0;
 		while (!done) {
+		printf("  Waiting for done...\n");
 			done = ioread32(dev, STATUS_REG);
 			done &= STATUS_MASK_DONE;
 		}
