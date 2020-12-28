@@ -68,31 +68,30 @@ int dctTransform(int matrix[], int dctval, int dct[])
 int main(int argc , char** argv) 
 { 
 
-    int IR,IC;
-    int OR,OC;
-
+    	int IR,IC;
+    	int OR,OC;
 	IR= atoi(argv[1]);
 	IC= atoi(argv[2]);
 	OR= atoi (argv[3]);
 	OC= atoi(argv[4]);
 	 
-int input_matrix [IR *IC];
+	int input_matrix [IR * IC];  
+
 	 #include "pv_data.h"
-int dctv;
-dctv=1;
-int output_matrix[OR*OC];
-int imatrix[64];
-int omatrix[64];
-int srow= ((IR-1)/8) +1;
-int scol = ((IC-1)/8)+1;
+	int dctv;
+	dctv=1;
+	int output_matrix[OR*OC];
+	int imatrix[64];
+	int omatrix[64];
+	int srow= ((IR-1)/8) +1;
+	int scol = ((IC-1)/8)+1;
 
-int nblk= srow * scol;
-int y_bound = ((IC-1)/8);
-int x_bound = ((IR-1)/8);
-int x= 0;
-int y =0;
+	int y_bound = ((IC-1)/8);
+	int x_bound = ((IR-1)/8);
+	int x= 0;
+	int y =0;
 
-int i,j;
+	int i,j;
         for(int blockidy=0; blockidy < srow ; blockidy++)
            {    
                for(int blockidx=0; blockidx < scol ; blockidx++)
@@ -116,7 +115,17 @@ int i,j;
                             }
                     }
 
+
+
+
+
                 dctTransform(imatrix,dctv, omatrix);     
+
+
+
+
+
+                     int ido = x * 8 * OC + y *8 ;
 
                 for(int i=0 ; i <8 ; i++)
                     {
@@ -126,10 +135,14 @@ int i,j;
                                 global_threadIDy = blockidy * 8 + i;
 
                                     if( global_threadIDy < OR && global_threadIDx < OC)
-                                       output_matrix[i*OC +j+id]=  omatrix[i*8 + j];  
+                                       output_matrix[i*OC +j+ido]=  omatrix[i*8 + j];  
                                     
                             }
                     }
+
+
+
+
                   
                if(y==y_bound)
                    {
@@ -142,7 +155,6 @@ int i,j;
            }
                     
   
-
  for (i = 0; i < OR; i++) {
         for (j = 0; j < OC; j++) {
 
